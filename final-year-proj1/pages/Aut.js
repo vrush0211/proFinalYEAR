@@ -12,7 +12,7 @@ export default function Auth(){
     return(<>
         <Button>Login</Button>
         <Button>Signup</Button>
-        <SignUp css={"block"} />
+        <SignUp />
 
     </>)
 }
@@ -23,30 +23,42 @@ export function SignUp(){
         Email:"" , Password:""
     })
     return(<>
-    <div className="container" style={{display:"none"}}></div>
+    <div className="container" ></div>
         <Input placeholder="Email" onChange={(e)=>{
-        console.log(e)
-        setState({...state ,Email:e })
+        console.log(e.target.value)
+        setState({...state ,Email:e.target.value })
       }}/>
        <Input placeholder="Password" onChange={(e)=>{
-        console.log(e)
-        setState({...state ,Password:e })
+        console.log(e.target.value)
+        setState({...state ,Password:e.target.value })
 
       }}/>
 
 <Button onClick={async()=>{
+    console.log(state)
     try{
+        
         if(state.Email === "" || state.Password === "") {
             alert("enter email and password")
         }else{
-            const data = await createUserWithEmailAndPassword(auth , state.Email , state.Password)
-        console.log(data)
-        router.push("Teacher")
+            createUserWithEmailAndPassword(auth, state.Email, state.Password)
+  .then((userCredential) => {
+    // Signed in 
+    const user = userCredential.user;
+    console.log(user)
+    router.push("Teacher")
+    // ...
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // ..
+  });
 
         }
         
     }catch(err){
-        console.log(err)
+        console.log(err.message)
     }
     
 }} >
